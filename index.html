@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deserción Estudiantil SENA: Blog Analítico</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:      #1a1a2e;
+  --ink-soft: #4a4a6a;
+  --blue:     #2563b0;
+  --blue-lt:  #dbeafe;
+  --teal:     #0d9488;
+  --teal-lt:  #ccfbf1;
+  --amber:    #d97706;
+  --amber-lt: #fef3c7;
+  --red:      #dc2626;
+  --red-lt:   #fee2e2;
+  --green:    #16a34a;
+  --green-lt: #dcfce7;
+  --bg:       #f8f7f4;
+  --white:    #ffffff;
+  --rule:     #e5e3de;
+  --mono:     'DM Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.75;
+  font-size: 16px;
+}
+
+/* ── PROGRESS ── */
+#bar {
+  position: fixed; top: 0; left: 0; height: 3px;
+  background: var(--blue); width: 0%;
+  z-index: 1000; transition: width .1s;
+}
+
+/* ── NAV ── */
+nav {
+  position: sticky; top: 0;
+  background: rgba(248,247,244,.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--rule);
+  z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 2rem; height: 56px;
+}
+.nav-brand {
+  font-family: 'Fraunces', serif;
+  font-size: 1rem; font-weight: 700;
+  color: var(--ink); text-decoration: none;
+}
+.nav-links { display: flex; gap: 1.5rem; list-style: none; }
+.nav-links a {
+  font-size: .8rem; font-weight: 500;
+  color: var(--ink-soft); text-decoration: none;
+  transition: color .2s;
+}
+.nav-links a:hover { color: var(--blue); }
+@media(max-width:640px){ .nav-links { display: none; } }
+
+/* ── HERO ── */
+.hero {
+  max-width: 760px; margin: 0 auto;
+  padding: 5rem 2rem 3rem;
+  border-bottom: 1px solid var(--rule);
+}
+.hero-label {
+  font-family: var(--mono);
+  font-size: .72rem; font-weight: 500;
+  color: var(--blue);
+  letter-spacing: .12em; text-transform: uppercase;
+  margin-bottom: 1.25rem;
+}
+.hero h1 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  font-weight: 700; line-height: 1.15;
+  letter-spacing: -.02em;
+  margin-bottom: 1.25rem;
+}
+.hero h1 em {
+  font-style: italic;
+  color: var(--blue);
+}
+.hero-sub {
+  font-size: 1.05rem; color: var(--ink-soft);
+  font-weight: 300; max-width: 580px;
+  margin-bottom: 2rem;
+}
+.hero-meta {
+  display: flex; flex-wrap: wrap; gap: .6rem;
+  font-size: .78rem; color: var(--ink-soft);
+}
+.meta-item {
+  display: flex; align-items: center; gap: .4rem;
+  background: var(--white);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: .3rem .7rem;
+}
+
+/* ── KPI ROW ── */
+.kpi-row {
+  max-width: 760px; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(4,1fr);
+  gap: 1px; background: var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: 12px; overflow: hidden;
+  margin-top: 2.5rem; margin-bottom: 0;
+}
+.kpi-cell {
+  background: var(--white);
+  padding: 1.25rem 1rem;
+  text-align: center;
+}
+.kpi-num {
+  font-family: 'Fraunces', serif;
+  font-size: 1.8rem; font-weight: 700;
+  display: block; line-height: 1;
+}
+.kpi-num.blue  { color: var(--blue); }
+.kpi-num.teal  { color: var(--teal); }
+.kpi-num.amber { color: var(--amber); }
+.kpi-num.red   { color: var(--red); }
+.kpi-lbl { font-size: .7rem; color: var(--ink-soft); margin-top: .3rem; }
+@media(max-width:500px){
+  .kpi-row { grid-template-columns: repeat(2,1fr); }
+}
+
+/* ── LAYOUT ── */
+.content {
+  max-width: 760px; margin: 0 auto;
+  padding: 0 2rem 5rem;
+}
+
+/* ── SECTION ── */
+.section {
+  padding: 3.5rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+.section:last-child { border-bottom: none; }
+
+.section-tag {
+  font-family: var(--mono);
+  font-size: .68rem; font-weight: 500;
+  color: var(--ink-soft);
+  letter-spacing: .12em; text-transform: uppercase;
+  display: flex; align-items: center; gap: .5rem;
+  margin-bottom: .75rem;
+}
+.section-tag::before {
+  content: '';
+  display: inline-block;
+  width: 18px; height: 1px;
+  background: var(--ink-soft);
+}
+
+.section h2 {
+  font-family: 'Fraunces', serif;
+  font-size: 1.75rem; font-weight: 700;
+  line-height: 1.2; letter-spacing: -.02em;
+  margin-bottom: 1.25rem;
+}
+
+p { margin-bottom: 1rem; color: var(--ink-soft); }
+p strong { color: var(--ink); font-weight: 500; }
+
+/* ── CALLOUT ── */
+.callout {
+  border-left: 3px solid var(--blue);
+  background: var(--blue-lt);
+  border-radius: 0 8px 8px 0;
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+  font-size: .9rem;
+}
+.callout.green { border-color: var(--green); background: var(--green-lt); }
+.callout.amber { border-color: var(--amber); background: var(--amber-lt); }
+.callout.red   { border-color: var(--red);   background: var(--red-lt); }
+
+/* ── TABLE ── */
+.tbl-wrap { overflow-x: auto; margin: 1.5rem 0; border-radius: 10px; border: 1px solid var(--rule); }
+table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+thead th {
+  background: var(--ink); color: var(--white);
+  padding: .65rem 1rem; text-align: left;
+  font-family: var(--mono); font-size: .7rem;
+  letter-spacing: .06em; text-transform: uppercase;
+  font-weight: 500;
+}
+tbody td {
+  padding: .65rem 1rem;
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink-soft);
+  vertical-align: top;
+}
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: var(--bg); }
+
+/* ── PILL ── */
+.pill {
+  display: inline-block;
+  padding: .15rem .55rem; border-radius: 99px;
+  font-size: .7rem; font-weight: 500;
+  font-family: var(--mono);
+}
+.pill-blue  { background: var(--blue-lt); color: var(--blue); }
+.pill-green { background: var(--green-lt); color: var(--green); }
+.pill-amber { background: var(--amber-lt); color: var(--amber); }
+
+/* ── TAG LIST ── */
+.tags { display: flex; flex-wrap: wrap; gap: .4rem; margin: 1rem 0; }
+.tag {
+  font-family: var(--mono); font-size: .68rem;
+  padding: .2rem .6rem; border-radius: 6px;
+  background: var(--white); border: 1px solid var(--rule);
+  color: var(--ink-soft);
+}
+
+/* ── BTN ── */
+.btn {
+  display: inline-flex; align-items: center; gap: .45rem;
+  padding: .7rem 1.4rem; border-radius: 8px;
+  font-size: .85rem; font-weight: 500;
+  text-decoration: none; cursor: pointer;
+  transition: all .2s; border: none;
+}
+.btn-primary {
+  background: var(--blue); color: var(--white);
+  box-shadow: 0 2px 8px rgba(37,99,176,.25);
+}
+.btn-primary:hover { background: #1d4ed8; transform: translateY(-1px); }
+.btn-secondary {
+  background: var(--white); color: var(--ink);
+  border: 1px solid var(--rule);
+}
+.btn-secondary:hover { border-color: var(--blue); color: var(--blue); }
+
+.btn-group { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.5rem; }
+
+/* ── FINDING CARDS ── */
+.findings {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem; margin: 1.5rem 0;
+}
+.finding {
+  background: var(--white);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 1.25rem;
+  transition: border-color .2s, transform .2s;
+}
+.finding:hover { border-color: var(--blue); transform: translateY(-2px); }
+.finding-icon { display: none; }
+.finding h4 {
+  font-family: 'Fraunces', serif;
+  font-size: .95rem; font-weight: 600;
+  margin-bottom: .4rem; color: var(--ink);
+}
+.finding p { font-size: .83rem; margin: 0; }
+
+/* ── CONCLUSION CARDS ── */
+.conclusions { display: grid; gap: 1rem; margin: 1.5rem 0; }
+.concl {
+  background: var(--white);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+  display: flex; gap: 1rem; align-items: flex-start;
+}
+.concl-q {
+  font-family: 'Fraunces', serif;
+  font-size: .8rem; font-weight: 700;
+  color: var(--blue);
+  background: var(--blue-lt);
+  border-radius: 6px;
+  padding: .2rem .6rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: .15rem;
+}
+.concl p { margin: 0; font-size: .88rem; }
+
+/* ── TEAM ── */
+.team {
+  display: flex; flex-wrap: wrap; gap: .75rem;
+  margin-top: 1.5rem;
+}
+.member {
+  display: flex; align-items: center; gap: .75rem;
+  background: var(--white); border: 1px solid var(--rule);
+  border-radius: 10px; padding: .75rem 1rem;
+  font-size: .83rem;
+}
+.avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--ink); color: var(--white);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Fraunces', serif; font-size: .85rem; font-weight: 700;
+  flex-shrink: 0;
+}
+.member-info { line-height: 1.3; }
+.member-name { font-weight: 500; color: var(--ink); font-size: .83rem; }
+.member-email { font-size: .72rem; color: var(--ink-soft); font-family: var(--mono); }
+
+/* ── ARCH STEPS ── */
+.arch {
+  display: flex; align-items: center;
+  gap: 0; flex-wrap: wrap;
+  margin: 1.5rem 0;
+  background: var(--white);
+  border: 1px solid var(--rule);
+  border-radius: 10px; overflow: hidden;
+}
+.arch-step {
+  flex: 1; min-width: 120px;
+  padding: 1.25rem 1rem; text-align: center;
+  border-right: 1px solid var(--rule);
+  position: relative;
+}
+.arch-step:last-child { border-right: none; }
+.arch-step .medal {
+  font-family: var(--mono); font-size: .65rem;
+  padding: .15rem .5rem; border-radius: 99px;
+  display: inline-block; margin-bottom: .5rem;
+}
+.bronze .medal { background: rgba(205,127,50,.12); color: #92400e; }
+.silver .medal { background: rgba(100,116,139,.12); color: #475569; }
+.gold-s .medal { background: var(--amber-lt); color: var(--amber); }
+.dash   .medal { background: var(--blue-lt); color: var(--blue); }
+.arch-step h4 { font-family: 'Fraunces', serif; font-size: .9rem; font-weight: 600; color: var(--ink); }
+.arch-step p  { font-size: .72rem; margin: .25rem 0 0; line-height: 1.4; }
+@media(max-width:500px){
+  .arch { flex-direction: column; }
+  .arch-step { border-right: none; border-bottom: 1px solid var(--rule); }
+  .arch-step:last-child { border-bottom: none; }
+}
+
+/* ── REVEAL ── */
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity .6s, transform .6s; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--rule);
+  padding: 2rem; text-align: center;
+  font-size: .78rem; color: var(--ink-soft);
+}
+</style>
+</head>
+<body>
+
+<div id="bar"></div>
+
+<nav>
+  <a class="nav-brand" href="#">Deserción SENA · 2024</a>
+  <ul class="nav-links">
+    <li><a href="#p1">Dataset</a></li>
+    <li><a href="#p2">Limpieza</a></li>
+    <li><a href="#p3">EDA</a></li>
+    <li><a href="#p4">Visualización</a></li>
+    <li><a href="#p5">Hallazgos</a></li>
+    <li><a href="#p6">Conclusiones</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero reveal">
+  <div class="hero-label">Blog · Business Analytics · Universidad de Cundinamarca</div>
+  <h1>Análisis y Predicción de la <em>Deserción Estudiantil</em> en el SENA</h1>
+  <p class="hero-sub">
+    Plataforma de inteligencia de datos construida sobre el ecosistema gratuito de Google para caracterizar, visualizar y predecir el abandono en la formación profesional integral colombiana.
+  </p>
+  <div class="hero-meta">
+    <span class="meta-item">Periodo 2024-02</span>
+    <span class="meta-item">Datos Abiertos Gov. Colombia</span>
+    <span class="meta-item">ODS 4: Educación de Calidad</span>
+    <span class="meta-item">Google Colab + Looker Studio</span>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi-cell">
+      <span class="kpi-num blue">42.080</span>
+      <div class="kpi-lbl">fichas de formación</div>
+    </div>
+    <div class="kpi-cell">
+      <span class="kpi-num teal">1'447.204</span>
+      <div class="kpi-lbl">aprendices matriculados</div>
+    </div>
+    <div class="kpi-cell">
+      <span class="kpi-num amber">52.579</span>
+      <div class="kpi-lbl">desertores registrados</div>
+    </div>
+    <div class="kpi-cell">
+      <span class="kpi-num red">3,63%</span>
+      <div class="kpi-lbl">tasa de deserción global</div>
+    </div>
+  </div>
+</div>
+
+<!-- AUTORES -->
+<div class="content">
+<div class="section reveal" style="padding-top:2.5rem">
+  <div class="section-tag">Equipo</div>
+  <div class="team">
+    <div class="member"><div class="avatar">AS</div><div class="member-info"><div class="member-name">Andrés Felipe Segura Suárez</div><div class="member-email">afsegura@ucundinamarca.edu.co</div></div></div>
+    <div class="member"><div class="avatar">BM</div><div class="member-info"><div class="member-name">Bairon Steven Martínez Marroquín</div><div class="member-email">bstevenmartinez@ucundinamarca.edu.co</div></div></div>
+    <div class="member"><div class="avatar">ST</div><div class="member-info"><div class="member-name">Santiago Andrés Téllez Ochoa</div><div class="member-email">satellez@ucundinamarca.edu.co</div></div></div>
+    <div class="member"><div class="avatar">LL</div><div class="member-info"><div class="member-name">Lorenzo Lotero Gaitán</div><div class="member-email">llotero@ucundinamarca.edu.co</div></div></div>
+  </div>
+</div>
+
+<!-- ARQUITECTURA -->
+<div class="section reveal">
+  <div class="section-tag">Infraestructura</div>
+  <h2>Arquitectura del proyecto</h2>
+  <p>El flujo de datos sigue el patrón <strong>medallón</strong> (Bronze → Silver → Gold) implementado sobre herramientas gratuitas de Google, sin necesidad de servidores ni licencias.</p>
+  <div class="arch">
+    <div class="arch-step bronze">
+      <span class="medal">Bronze</span>
+      <h4>CSV Original</h4>
+      <p>42.080 filas desde la API de Datos Abiertos</p>
+    </div>
+    <div class="arch-step silver">
+      <span class="medal">Silver</span>
+      <h4>Google Colab</h4>
+      <p>Limpieza y columnas derivadas con Python</p>
+    </div>
+    <div class="arch-step gold-s">
+      <span class="medal">Gold</span>
+      <h4>Google Drive</h4>
+      <p>6 tablas resumidas listas para análisis</p>
+    </div>
+    <div class="arch-step dash">
+      <span class="medal">Dashboard</span>
+      <h4>Looker Studio</h4>
+      <p>Visualizaciones interactivas con filtros</p>
+    </div>
+  </div>
+</div>
+
+<!-- PUNTO 1 -->
+<div class="section reveal" id="p1">
+  <div class="section-tag">Punto 1</div>
+  <h2>Entendimiento del Dataset</h2>
+
+  <p>El dataset utilizado es el registro oficial <strong>"Deserción de la Formación Profesional Integral"</strong> publicado por el SENA en el portal de Datos Abiertos del Gobierno de Colombia. Contiene <strong>42.080 registros</strong> y <strong>15 variables</strong> que describen la situación de deserción a nivel de ficha de formación — es decir, a nivel de grupo de aprendices.</p>
+
+  <p>La información abarca el periodo <strong>2024-02</strong> y cubre las <strong>33 regionales</strong> del SENA a nivel nacional, con desagregación por centro de formación, programa, nivel académico y modalidad. Cada fila representa un grupo único identificado por su ficha, con el total de aprendices matriculados y el número de desertores registrados en ese periodo.</p>
+
+  <div class="callout">
+    <strong>¿Por qué este dataset?</strong> Es una fuente oficial, gratuita, de cobertura nacional y con suficiente riqueza de variables para aplicar las tres fases del proyecto: ingeniería de datos, análisis descriptivo y modelado predictivo. Además se alinea directamente con el ODS 4 de Educación de Calidad.
+  </div>
+
+  <h3 style="font-family:'Fraunces',serif;font-size:1.15rem;margin:1.5rem 0 .75rem">Diccionario de datos</h3>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th>Variable</th><th>Tipo</th><th>Descripción</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code style="font-family:var(--mono);font-size:.78rem">CODIGO_REGIONAL</code></td><td><span class="pill pill-blue">Numérica</span></td><td>Código DANE del departamento / regional SENA</td></tr>
+        <tr><td><code style="font-family:var(--mono);font-size:.78rem">NOMBRE_REGIONAL</code></td><td><span class="pill pill-amber">Categórica</span></td><td>Nombre del departamento donde opera la regional</td></tr>
+        <tr><td><code style="font-family:var(--mono);font-size:.78rem">CODIGO_CENTRO</code></td><td><span class="pill pill-blue">Numérica</span></td><td>Identificador numérico del centro de formación</td></tr>
+        <tr><td><code style="font-family:var(--mono);font-size:.78rem">NOMBRE_CENTRO</code></td><td><span class="pill pill-amber">Categórica</span></td><td>Nombre del centro de formación (117 centros únicos)</td></tr>
+        <tr><td><code style="font-family:var(--mono);font-size:.78rem">IDENTIFICADOR_UNICO_FICHA</code></td><td><span class="pill pill-blue">Numérica</span></td><td>Clave primaria única por grupo de aprendices</td></tr>
+        <tr><td><code style="font-family:var(--mono);font-size:.78rem">FECHA_INICIO_FICHA</code></td><td><span class="pill pill-green">Fecha</span></td><td>Fecha de inicio del grupo (formato DD/MM/AAAA)</td></tr>
+        <tr><td><code style="font-family:var(--mono);font-size:.78rem">FECHA_TERMINACION_FICHA</code></td><td><span class="pill pill-green">Fecha</span></td><td>Fecha de finalización prevista del grupo</td></tr>
+        <tr><td><code style="font-family:var(--mono);font-size:.78rem">CODIGO_PROGRAMA</code></td><td><span class="pill pill-amber">Categórica</span></td><td>Código alfanumérico oficial del programa</td></tr>
+        <tr><td><code style="font-family:var(--mono);font-size:.78rem">VERSION_PROGRAMA</code></td><td><span class="pill pill-blue">Numérica</span></td><td>Versión del diseño curricular (1 a 13)</td></tr>
+        <tr><td><code style="font-family:var(--mono);font-size:.78rem">NOMBRE_PROGRAMA_FORMACION</code></td><td><span class="pill pill-amber">Categórica</span></td><td>Nombre del programa (ej. COCINA, SISTEMAS)</td></tr>
+        <tr><td><code style="font-family:var(--mono);font-size:.78rem">NIVEL_FORMACION</code></td><td><span class="pill pill-amber">Categórica</span></td><td>Nivel: TÉCNICO, TECNÓLOGO, CURSO ESPECIAL, OPERARIO...</td></tr>
+        <tr><td><code style="font-family:var(--mono);font-size:.78rem">MODALIDAD_FORMACION</code></td><td><span class="pill pill-amber">Categórica</span></td><td>Modalidad: PRESENCIAL, VIRTUAL, A DISTANCIA</td></tr>
+        <tr><td><code style="font-family:var(--mono);font-size:.78rem">TOTAL_APRENDICES_MATRICULADOS</code></td><td><span class="pill pill-blue">Numérica</span></td><td>Total de aprendices inscritos en la ficha. Rango: 1–208</td></tr>
+        <tr><td><code style="font-family:var(--mono);font-size:.78rem">DESERTORES_AÑO_ACTUAL</code></td><td><span class="pill pill-blue">Numérica</span></td><td>Número de desertores en el año actual. Rango: 0–84</td></tr>
+        <tr><td><code style="font-family:var(--mono);font-size:.78rem">PERIODO</code></td><td><span class="pill pill-blue">Numérica</span></td><td>Periodo académico codificado como float (202.402 = 2024-02)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tags">
+    <span class="tag">15 variables</span>
+    <span class="tag">42.080 registros</span>
+    <span class="tag">0 valores nulos</span>
+    <span class="tag">33 regionales</span>
+    <span class="tag">7 niveles de formación</span>
+    <span class="tag">3 modalidades</span>
+  </div>
+</div>
+
+<!-- PUNTO 2 -->
+<div class="section reveal" id="p2">
+  <div class="section-tag">Punto 2</div>
+  <h2>Limpieza de Datos</h2>
+
+  <p>La limpieza se realizó en <strong>Google Colab</strong> con Python y pandas, transformando el dataset crudo (capa Bronze) en un dataset limpio y enriquecido (capa Silver). Se aplicaron seis pasos secuenciales.</p>
+
+  <div class="callout green">
+    El dataset partió en muy buen estado: <strong>0 valores nulos</strong> y <strong>0 filas duplicadas</strong>. El SENA solo publica fichas completamente diligenciadas, lo que garantiza integridad desde el origen.
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th>Aspecto</th><th>Antes (Bronze)</th><th>Después (Silver)</th><th>Decisión</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Valores nulos</td><td>0</td><td>0 confirmado</td><td><span class="pill pill-green">No aplica</span></td></tr>
+        <tr><td>Duplicados</td><td>0</td><td>0 confirmado</td><td><span class="pill pill-green">No aplica</span></td></tr>
+        <tr><td>Comillas en texto</td><td>"TECNICO"</td><td>TECNICO</td><td><span class="pill pill-blue">str.strip('"')</span></td></tr>
+        <tr><td>Tipo de fechas</td><td>object (texto)</td><td>datetime64</td><td><span class="pill pill-blue">pd.to_datetime()</span></td></tr>
+        <tr><td>Campo PERIODO</td><td>202.402 (ilegible)</td><td>Etiqueta "2024-02"</td><td><span class="pill pill-blue">Columna creada</span></td></tr>
+        <tr><td>Outliers numéricos</td><td>Detectados con IQR</td><td>Conservados</td><td><span class="pill pill-green">Valores reales</span></td></tr>
+        <tr><td>Errores lógicos</td><td>Verificados</td><td>0 encontrados</td><td><span class="pill pill-green">Dataset consistente</span></td></tr>
+        <tr><td>Columnas totales</td><td>15</td><td>19 (+4 derivadas)</td><td><span class="pill pill-blue">TASA_DESERCION, DURACION_DIAS...</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Los <strong>outliers detectados con el método IQR</strong> se conservaron porque representan casos reales con interpretación operativa: grupos grandes en centros urbanos, programas de larga duración y fichas con deserción total en grupos pequeños son fenómenos válidos que aportan información al análisis.</p>
+
+  <p>El desarrollo completo de este punto, incluyendo el código de limpieza, los resultados de cada verificación y la tabla antes vs. después ejecutada sobre el dataset real, se puede consultar ingresando al notebook de Google Colab.</p>
+
+  <div class="btn-group">
+    <a href="https://colab.research.google.com/drive/1eEZx2v_FmNUi00EWMFabJgsPf3hwN1uM?usp=sharing" target="_blank" class="btn btn-primary">Ver Notebook en Google Colab</a>
+  </div>
+</div>
+
+<!-- PUNTO 3 -->
+<div class="section reveal" id="p3">
+  <div class="section-tag">Punto 3</div>
+  <h2>Exploración Básica: EDA</h2>
+
+  <p>Se aplicó un análisis exploratorio completo sobre el dataset Silver para entender el comportamiento de los datos antes de visualizarlos. Se calcularon estadísticas descriptivas, distribuciones y relaciones entre variables.</p>
+
+  <h3 style="font-family:'Fraunces',serif;font-size:1.1rem;margin:1.5rem 0 .75rem">Estadísticas clave</h3>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th>Variable</th><th>Media</th><th>Mediana</th><th>Moda</th><th>Desv. Std</th><th>Asimetría</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Aprendices matriculados</td><td>34.4</td><td>27</td><td>20</td><td>21.3</td><td>+2.1 (derecha)</td></tr>
+        <tr><td>Desertores año actual</td><td>1.25</td><td>0</td><td>0</td><td>6.4</td><td>+8.3 (muy asimétrica)</td></tr>
+        <tr><td>Tasa de deserción (%)</td><td>2.59</td><td>0</td><td>0</td><td>11.8</td><td>+5.1 (muy asimétrica)</td></tr>
+        <tr><td>Duración del programa (días)</td><td>512</td><td>540</td><td>540</td><td>238</td><td>−0.3 (leve izquierda)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 style="font-family:'Fraunces',serif;font-size:1.1rem;margin:1.5rem 0 .75rem">Distribución por modalidad</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th>Modalidad</th><th>Fichas</th><th>% del total</th><th>Tasa deserción</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Presencial</td><td>32.344</td><td>76.9%</td><td>3.41%</td></tr>
+        <tr><td>Virtual</td><td>9.592</td><td>22.8%</td><td>4.52%</td></tr>
+        <tr><td>A Distancia</td><td>144</td><td>0.3%</td><td>2.88%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 style="font-family:'Fraunces',serif;font-size:1.1rem;margin:1.5rem 0 .75rem">Distribución por nivel de formación</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th>Nivel</th><th>Fichas</th><th>% del total</th><th>Tasa deserción</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Técnico</td><td>16.832</td><td>40.0%</td><td>4.21%</td></tr>
+        <tr><td>Curso Especial</td><td>14.285</td><td>33.9%</td><td>1.85%</td></tr>
+        <tr><td>Tecnólogo</td><td>10.259</td><td>24.4%</td><td>4.78%</td></tr>
+        <tr><td>Operario</td><td>423</td><td>1.0%</td><td>2.10%</td></tr>
+        <tr><td>Auxiliar</td><td>128</td><td>0.3%</td><td>3.45%</td></tr>
+        <tr><td>Evento</td><td>142</td><td>0.3%</td><td>0.42%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout amber">
+    <strong>Correlación clave:</strong> existe una correlación negativa débil entre el tamaño del grupo y la tasa de deserción, es decir, los grupos más grandes tienden a tener tasas ligeramente menores. La modalidad virtual presenta correlación positiva con la deserción.
+  </div>
+
+  <p>El análisis exploratorio completo, incluyendo los histogramas, la matriz de correlación de Pearson y las tablas cruzadas ejecutadas sobre el dataset Silver, se puede consultar ingresando al notebook de Google Colab.</p>
+
+  <div class="btn-group">
+    <a href="https://colab.research.google.com/drive/1eEZx2v_FmNUi00EWMFabJgsPf3hwN1uM?usp=sharing" target="_blank" class="btn btn-primary">Ver EDA completo en Colab</a>
+  </div>
+</div>
+
+<!-- PUNTO 4 -->
+<div class="section reveal" id="p4">
+  <div class="section-tag">Punto 4</div>
+  <h2>Visualización: Dashboard Interactivo</h2>
+
+  <p>Las visualizaciones se construyeron en <strong>Looker Studio (Data Studio)</strong>, conectado directamente a las tablas Gold exportadas desde Colab a Google Drive. El dashboard está organizado en <strong>5 páginas temáticas</strong> con filtros interactivos por región, nivel y modalidad.</p>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th>Página</th><th>Contenido</th><th>Fuente</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>1. Panorama General</strong></td><td>4 KPIs, dona por modalidad, barras por nivel</td><td>gold_fichas_limpio</td></tr>
+        <tr><td><strong>2. Análisis Regional</strong></td><td>Barras top regionales por tasa, tabla completa</td><td>gold_por_regional</td></tr>
+        <tr><td><strong>3. Nivel y Modalidad</strong></td><td>Barras agrupadas, tabla cruzada nivel × modalidad</td><td>gold_por_nivel + gold_nivel_x_modalidad</td></tr>
+        <tr><td><strong>4. Evolución Temporal</strong></td><td>Líneas de fichas y tasa por año de inicio</td><td>gold_temporal</td></tr>
+        <tr><td><strong>5. Detalle por Programa</strong></td><td>Tabla con filtros, top 10 programas con más deserción</td><td>gold_fichas_limpio</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Los gráficos incluyen <strong>barras horizontales</strong> para comparar categorías, <strong>gráficas de líneas</strong> para la evolución temporal, <strong>tablas cruzadas</strong> para análisis multidimensional y <strong>controles de filtro</strong> que permiten segmentar los datos en tiempo real.</p>
+
+  <div class="btn-group">
+    <a href="https://datastudio.google.com/reporting/c2cb5979-f150-4ae1-8022-7611198efc6b" target="_blank" class="btn btn-primary">Ver Dashboard en Looker Studio</a>
+  </div>
+</div>
+
+<!-- PUNTO 5 -->
+<div class="section reveal" id="p5">
+  <div class="section-tag">Punto 5</div>
+  <h2>Hallazgos Principales</h2>
+  <p>A partir del análisis descriptivo y las visualizaciones se identificaron los siguientes patrones, tendencias y segmentos relevantes:</p>
+
+  <div class="findings">
+
+    <div class="finding">
+      <h4>Amazonas lidera la deserción regional</h4>
+      <p>Con una tasa del <strong>19%</strong>, Amazonas es la regional con mayor proporción de abandono, seguida de Vaupés con el 13%. Ambas regiones presentan condiciones de conectividad y acceso significativamente más limitadas que las regiones centrales.</p>
+    </div>
+
+    <div class="finding">
+      <h4>La virtualidad como factor de riesgo</h4>
+      <p>La modalidad virtual registra una tasa <strong>32% más alta</strong> que la presencial (4.52% frente a 3.41%). La falta de presencialidad dificulta la retención, especialmente en zonas con conectividad deficiente.</p>
+    </div>
+
+    <div class="finding">
+      <h4>Tecnólogos con mayor tasa de abandono</h4>
+      <p>Los programas tecnólogos presentan la tasa más alta (4.78%), posiblemente por su mayor duración y exigencia académica. Los cursos especiales son los más estables, con apenas el 1.85%.</p>
+    </div>
+
+    <div class="finding">
+      <h4>El 75% de fichas no registra desertores</h4>
+      <p>La deserción está altamente concentrada: solo el <strong>25% de los grupos</strong> tiene al menos un desertor. Esto indica que el problema no es generalizado sino focalizado en programas y regiones específicas.</p>
+    </div>
+
+    <div class="finding">
+      <h4>Grupos grandes, menor tasa relativa</h4>
+      <p>Existe una correlación negativa débil entre el tamaño del grupo y la tasa de deserción. Los grupos más numerosos, con más de 40 aprendices, tienden a presentar tasas ligeramente menores, posiblemente por mayor estructura de apoyo.</p>
+    </div>
+
+    <div class="finding">
+      <h4>Tres perfiles de duración bien diferenciados</h4>
+      <p>Los histogramas revelan tres picos claros: <strong>180 días</strong> para cursos especiales, <strong>540 días</strong> para técnicos y <strong>720 días</strong> para tecnólogos. La duración es un predictor indirecto del nivel de formación y del riesgo de abandono.</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- PUNTO 6 -->
+<div class="section reveal" id="p6">
+  <div class="section-tag">Punto 6</div>
+  <h2>Conclusiones Descriptivas</h2>
+  <p>Con base en el análisis efectuado, se responden las tres preguntas fundamentales del análisis descriptivo:</p>
+
+  <div class="conclusions">
+
+    <div class="concl">
+      <div class="concl-q">¿Qué está pasando?</div>
+      <p>El SENA registra una tasa de deserción global del <strong>3.63%</strong> en el periodo 2024-02, equivalente a <strong>52.579 aprendices</strong> que abandonaron sus programas de un total de 1'447.204 matriculados. La deserción no se distribuye uniformemente: el 75% de las fichas no reporta ningún desertor, lo que indica que el problema está focalizado en un subconjunto específico de programas, regiones y modalidades. La formación virtual y los niveles técnico y tecnólogo concentran las tasas más elevadas.</p>
+    </div>
+
+    <div class="concl">
+      <div class="concl-q">¿Dónde están los problemas?</div>
+      <p>Geográficamente, las regiones de <strong>Amazonas y Vaupés</strong> presentan tasas de deserción que triplican el promedio nacional, lo que refleja las brechas de infraestructura, conectividad y condiciones socioeconómicas en territorios periféricos. A nivel de modalidad, la formación <strong>virtual</strong> es consistentemente más propensa al abandono en todos los niveles analizados. A nivel de programa, los <strong>tecnólogos</strong> acumulan la mayor tasa relativa, mientras que programas como "Actualización del Sistema de Gestión de Seguridad y Salud en el Trabajo" y "Manejo de Herramientas Microsoft Office" encabezan el ranking de desertores absolutos.</p>
+    </div>
+
+    <div class="concl">
+      <div class="concl-q">¿Qué oportunidades existen?</div>
+      <p>El hecho de que el <strong>75% de los grupos no tenga desertores</strong> demuestra que la retención es alcanzable: hay centros y programas que logran resultados muy positivos. Replicar sus prácticas en los segmentos de mayor riesgo es una oportunidad concreta. Adicionalmente, la correlación entre virtualidad y deserción sugiere que <strong>mejorar el acompañamiento en programas virtuales</strong>, mediante tutorías, seguimiento activo y nivelación previa, podría reducir significativamente el abandono. Por último, focalizar recursos en las regiones periféricas con mayor tasa de deserción, especialmente mediante estrategias presenciales o semipresenciales, contribuiría a reducir la brecha territorial y a cumplir las metas del ODS 4.</p>
+    </div>
+
+  </div>
+
+  <div class="callout">
+    <strong>Próxima fase:</strong> los hallazgos de este análisis descriptivo servirán como base para la construcción de un modelo de machine learning orientado a predecir el riesgo de deserción a nivel de ficha de formación.
+  </div>
+</div>
+
+</div><!-- /content -->
+
+<footer>
+  <p>Proyecto de Business Analytics · Universidad de Cundinamarca · 2025</p>
+  <p style="margin-top:.3rem">Dataset: <strong>Deserción de la Formación Profesional Integral</strong> · SENA · Datos Abiertos Gov. Colombia</p>
+</footer>
+
+<script>
+window.addEventListener('scroll', () => {
+  const pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
+  document.getElementById('bar').style.width = pct + '%';
+});
+const obs = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) setTimeout(() => e.target.classList.add('visible'), i * 60);
+  });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
